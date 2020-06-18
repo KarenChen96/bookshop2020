@@ -1,0 +1,8 @@
+.sapFDynamicPageContent, .sapFDynamicPageContentFitContainer, .dynamicPageForGanttChart {
+    position: relative !important;
+    padding: 0 0 0 0 !important;
+}
+
+.ppmTinyMarginTop{
+	margin-top : 4px;
+}

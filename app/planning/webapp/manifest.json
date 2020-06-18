@@ -1,0 +1,212 @@
+{
+	"_version": "1.9.0",
+	"sap.app": {
+		"id": "${project.artifactId}",
+		"type": "application",
+		"resources": "resources.json",
+		"i18n": "i18n/i18n.properties",
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"applicationVersion": {
+			"version": "${project.version}"
+		},
+		"ach": "PPM-FIO",
+		"dataSources": {
+			"mainService": {
+				"uri": "/api/planning/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0"					
+				}
+			}		
+		},
+		"crossNavigation": {
+			"inbounds": {
+				"MyProjects": {
+					"semanticObject": "EnterpriseProject",
+					"action": "planProject",
+					"signature": {
+						"additionalParameters": "allowed",
+						"parameters": {
+							"ProjectUUID": {
+								"required": true
+							},
+							"IsActiveEntity": {
+								"required": true
+							}
+						}
+					}
+				}
+			},
+			"outbounds": {
+				"WorkPackage": {
+					"semanticObject": "EnterpriseProject",
+					"action": "processProjectElement",
+					"parameters": {
+						"ProjectUUID": {},
+						"ActiveTaskUUID": {},
+						"IsActiveEntity": {}
+					}
+				},
+				"ProjectBuilder": {
+					"semanticObject": "Project",
+					"action": "displayDetails",
+					"parameters": {
+						"Project": {}
+					}
+				},
+				"ProjectControl": {
+					"semanticObject": "EnterpriseProject",
+					"action": "maintain",
+					"parameters": {
+						"ProjectUUID": {},
+						"IsActiveEntity": {}
+					}
+				},
+				"MonitorProject": {
+					"semanticObject": "EnterpriseProject",
+					"action": "monitor",
+					"parameters": {
+						"Project": {}
+					}
+				},
+				"ProjectCost": {
+					"semanticObject": "Project",
+					"action": "displayFinancialReport",
+					"parameters": {
+						"Project": {}
+					}
+				},
+				"ProjectBudget": {
+					"semanticObject": "EnterpriseProject",
+					"action": "displayProjectBudget",
+					"parameters": {
+						"Project": {}
+					}
+				},											
+				"ProjectProcurement": {
+					"semanticObject": "Project",
+					"action": "manageProcurement",
+					"parameters": {
+						"Project": {},
+						"DisplayCurrency": {}
+					}
+				}
+			}
+		},
+		"sourceTemplate": {
+			"id": "sap.ui.ui5-template-plugin.1worklist",
+			"version": "1.58.1"
+		}
+	},
+	"sap.fiori": {
+		"archeType": "transactional",
+		"registrationIds": [
+			"F3822"
+		]
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "sap-icon://task",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": false,
+			"phone": false
+		}
+	},
+	"sap.ui5": {
+		"rootView": {
+			"viewName": "projectplanning.view.Project",
+			"type": "XML",
+			"async": true,
+			"id": "Project"
+		},
+		"dependencies": {
+			"minUI5Version": "${sap.ui5.dist.version}",
+			"libs": {
+				"sap.ui.core": {
+					"lazy": false
+				},
+				"sap.ui.generic.app": {
+					"lazy": true
+				},
+				"sap.m": {
+					"lazy": false
+				},
+				"sap.ui.comp": {
+					"lazy": false
+				},
+				"sap.f": {
+					"lazy": false
+				},
+				"sap.ui.layout": {
+					"lazy": false
+				},
+				"sap.ushell": {
+					"lazy": true
+				},
+				"sap.gantt": {
+					"lazy": false
+				},
+				"sap.ui.table": {
+					"lazy": false
+				}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"config": {
+			"fullWidth": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "projectplanning.i18n.i18n"
+				}
+			},
+			"": {
+				"dataSource": "mainService",
+				"preload": true
+			}
+		},
+		"resources": {
+			"css": [{
+				"uri": "css/style.css"
+			}]
+		},
+		"services": {
+			"ShellUIService": {
+				"factoryName": "sap.ushell.ui5service.ShellUIService",
+				"lazy": false,
+				"settings": {
+					"setTitle": "auto"
+				}
+			}
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "projectplanning.view",
+				"controlId": "Project",
+				"controlAggregation": "pages",
+				"async": true
+			},
+			"routes": [
+
+			],
+			"targets": {
+			}
+		}
+	}
+}

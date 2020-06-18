@@ -1,0 +1,296 @@
+<mvc:View controllerName="projectplanning.controller.Project"
+	xmlns:m="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:layout="sap.ui.layout"
+	xmlns:table="sap.ui.table"
+	xmlns:dnd="sap.ui.core.dnd"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:smartvariants="sap.ui.comp.smartvariants"
+	xmlns:gantt="sap.gantt.simple"
+	xmlns:smartField="sap.ui.comp.smartfield"
+	xmlns:f="sap.f"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<m:App id="Project">
+		<f:DynamicPage id="ObjectPageLayout" class="dynamicPageForGanttChart">
+			<f:title>
+				<f:DynamicPageTitle id="projectHeaderTitle" stateChange="onHeaderStateChange">
+					<f:heading>
+						<m:Title text="{header>/ProjectName}"/>
+					</f:heading>
+					<f:expandedContent>
+						<m:Label text="{header>/Project}"/>
+					</f:expandedContent>
+					<f:content>
+						<m:ObjectMarker id="objectMarker" visibility="IconOnly" visible="false" class="ppmTinyMarginTop" press="onObjectMarkerPress"/>
+					</f:content>
+					<f:actions>
+						<m:Button type="Emphasized" id="button_edit" text="{i18n>BUTTON_EDIT}" press="onEditPress" visible="false">
+			              <m:layoutData>
+			                <m:OverflowToolbarLayoutData priority="NeverOverflow" />
+			              </m:layoutData>
+			            </m:Button>
+			            <m:Button id="button_open_in" type="Transparent" text="{i18n>BUTTON_RELATED_APPS}" enabled="false" press="onOpenInPress">
+			              <m:layoutData>
+			                <m:OverflowToolbarLayoutData priority="NeverOverflow" />
+			              </m:layoutData>
+			            </m:Button>
+			            <m:Button id="button_action" icon="sap-icon://action" type="Transparent" tooltip="{i18n>TOOLTIP_SHARE}" press="onActionPress">
+			              <m:layoutData>
+			                <m:OverflowToolbarLayoutData priority="NeverOverflow" />
+			              </m:layoutData>
+			            </m:Button>
+					</f:actions>
+				</f:DynamicPageTitle>
+			</f:title>
+
+			<f:header>
+				<f:DynamicPageHeader id="projectPageHeader">
+					<f:content>
+							<layout:HorizontalLayout class="sapUiMediumMarginEnd">
+								<m:Label text="{i18n>TITLE_PROCESS_STATUS}" labelFor="linkProcessingStatus" class="sapUiTinyMarginEnd"/>
+								<m:Link text="{header>/ProcessingStatusText}" id="linkProcessingStatus" press="openProcessingStatus"/>
+							</layout:HorizontalLayout>
+							<layout:HorizontalLayout class="sapUiMediumMarginEnd">
+								<m:Label text="{i18n>LABEL_PROJECT_PROFILE}" class="sapUiTinyMarginEnd"/>
+								<m:Label text="{header>/ProjectProfileCodeText}"/>
+							</layout:HorizontalLayout>
+							<layout:HorizontalLayout>
+								<m:Label text="{i18n>TITLE_PROJECT_MANAGER}" labelFor="linkProjectManager" class="sapUiTinyMarginEnd"/>
+								<m:Link text="{header>/PersonFullName}" id="linkProjectManager" press="openProjectManager"/>
+							</layout:HorizontalLayout>
+					</f:content>
+				</f:DynamicPageHeader>
+			</f:header>
+
+			<f:content class="sapFDynamicPageAlignContent" width="auto">
+				<!--
+				<m:IconTabBar id="idIconTabBarNoIcons" expanded="{device>/isNoPhone}" stretchContentHeight="false" class="sapUiResponsiveContentPadding ganttChartHeight">
+					<m:items>
+						<m:IconTabFilter text="{i18n>LABEL_TAB_WBS}">
+						</m:IconTabFilter>
+						<m:IconTabFilter visible="false">
+							<m:Text  />
+						</m:IconTabFilter>
+					</m:items>
+
+					<m:content>
+					-->
+						<gantt:GanttChartContainer id="ganttContainer" enableTimeScrollSync="true" height="205px" class="sapUiSmallMarginTop">
+							<gantt:toolbar>
+								<gantt:ContainerToolbar showSettingButton="false" showLegendButton="true" design="Transparent" alignCustomContentToRight="true">
+									<smartvariants:SmartVariantManagement id="btnSmartVariant" showExecuteOnSelection="true" showShare="true" lifecycleSupport="true" persistencyKey="projectplanning"/>
+									<m:ToolbarSpacer id="spacer"/>
+									<!-- <m:Button id="btnStatus" text="{i18n>BUTTON_PROCESSING_STATUS}" press="onStatusPressed" type="Transparent" visible="false"/> -->
+									<m:MenuButton id="btnStatus" text="{i18n>BUTTON_PROCESSING_STATUS}" visible="false">
+										<m:menu>
+											<m:Menu>
+												<m:items>
+													<m:MenuItem text="{i18n>BUTTON_STATUS_RELEASE}" visible="{= ${processing>/status} === '00' || ${processing>/status} === '12' || ${processing>/status} === '40'}" press="onReleaseButtonPressed"/>
+													<m:MenuItem text="{i18n>BUTTON_STATUS_COMPLETE}" visible="{= ${processing>/status} === '10' || ${processing>/status} === '42'}" press="onCompleteButtonPressed" />
+													<m:MenuItem text="{i18n>BUTTON_STATUS_CLOSE}" visible="{= ${processing>/status} === '40'}" press="onCloseButtonPressed" />
+													<m:MenuItem text="{i18n>BUTTON_STATUS_LOCK}" visible="{= ${processing>/status} === '00' || ${processing>/status} === '12' || ${processing>/status} === '10' || ${processing>/status} === '40'}" press="onLockButtonPressed" />
+													<m:MenuItem text="{i18n>BUTTON_STATUS_UNLOCK}" visible="{= ${processing>/status} === '20'}" press="onUnlockButtonPressed" />
+												</m:items>
+											</m:Menu>
+										</m:menu>
+									</m:MenuButton>
+									<m:Button id="btnCopy" text="{i18n>BUTTON_COPY}" press="onCopyPressed" type="Transparent" visible="false"/>
+									<m:Button id="btnAdd" text="{i18n>BUTTON_ADD}" press="onAddPressed" type="Transparent" visible="false"/>
+									<m:Button id="btnDelete" text="{i18n>BUTTON_DELETE}" press="onDeletePressed" type="Transparent" visible="false"/> 
+									<m:Button id="btnMoveUp" icon="sap-icon://arrow-top" press="onMoveUpPressed" type="Transparent" tooltip="{i18n>TOOLTIP_MOVEUP}" visible="false"/>
+									<m:Button id="btnMoveDown" icon="sap-icon://arrow-bottom" press="onMoveDownPressed" type="Transparent" tooltip="{i18n>TOOLTIP_MOVEDOWN}" visible="false"/>
+									<m:Button id="btnIndent" icon="sap-icon://arrow-right" press="onIndentPressed" type="Transparent" tooltip="{i18n>TOOLTIP_INDENT}" visible="false"/>
+									<m:Button id="btnOutdent" icon="sap-icon://arrow-left" press="onOutdentPressed" type="Transparent" tooltip="{i18n>TOOLTIP_OUTDENT}" visible="false"/>
+									<m:Button id="btnExpand" icon="sap-icon://expand-all" press="onExpandPressed" type="Transparent" tooltip="{i18n>TOOLTIP_EXPAND_ALL}" />
+									<m:Button id="btnCollapse" icon="sap-icon://collapse-all" press="onCollapsePressed" type="Transparent" tooltip="{i18n>TOOLTIP_COLLAPSE_ALL}"/>
+									<m:Button id="btnSettings" icon="sap-icon://action-settings" press="onP13nDialog"/>
+									<gantt:legendContainer>
+										<gantt:LegendContainer legends="{path:'legend>/', factory:'.legendFactory'}" width="230px" height="250px">
+										</gantt:LegendContainer>
+									</gantt:legendContainer>
+								</gantt:ContainerToolbar>
+							</gantt:toolbar>
+							<gantt:GanttChartWithTable id="ganttChartWithTable" ghostAlignment="Start" adhocLineLayer="Bottom" shapeSelectionMode="Single" selectionPanelSize="50%">
+								<gantt:table>
+									<table:TreeTable id="treeTable" selectionMode="Single" visibleRowCountMode="Auto" selectionBehavior="Row" enableColumnReordering="true" rowSelectionChange="onRowSelectionChange" rowActionCount="1" enableBusyIndicator="true">
+										<table:rowActionTemplate>
+											<table:RowAction>
+												<table:RowActionItem icon="sap-icon://navigation-right-arrow" press="onDetailPressed" text="{i18n>BUTTON_DETAIL}" 
+																visible="{parts: ['HierarchyNodeLevel','ProjectUUID'],	formatter: '.formatter.formatRowActionVisible'}"/>
+											</table:RowAction>
+										</table:rowActionTemplate>
+										<table:columns>
+											<table:Column id="ColTaskName" width="300px">
+												<table:label>
+													<m:Label text="{i18n>LABEL_OBJECT_NAME}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{TaskName}" contextEditable="{= !${IsActiveEntity} }" clientSideMandatoryCheck="false"/>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColTaskID" width="200px">
+												<table:label>
+													<m:Label text="{i18n>LABEL_TASK_ID}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{Task}" contextEditable="{= !${IsActiveEntity} }"/>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColProcessingStatus" width="150px">
+												<table:label>
+													<m:Label text="{i18n>LABEL_PROCESSING_STATUS}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{ProcessingStatus}" contextEditable="false">
+														<smartField:customData>
+															<core:CustomData key="defaultInputFieldDisplayBehaviour" value="descriptionOnly" />
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColStart" width="150px" hAlign="End">
+												<table:label>
+													<m:Label text="{i18n>LABEL_START_DATETIME}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{PlannedStartDate}" contextEditable="{= !${IsActiveEntity} }">
+														<smartField:customData>
+															<core:CustomData key="dateFormatSettings" value='\{"UTC":true\}'/>
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColEnd" width="150px" hAlign="End">
+												<table:label>
+													<m:Label text="{i18n>LABEL_FINISH_DATETIME}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{PlannedEndDate}" contextEditable="{= !${IsActiveEntity} }">
+														<smartField:customData>
+															<core:CustomData key="dateFormatSettings" value='\{"UTC":true\}'/>
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColCostCenter" width="150px" visible="true">
+												<table:label>
+													<m:Label text="{i18n>LABEL_COST_CENTER}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{ResponsibleCostCenter}" contextEditable="{= !${IsActiveEntity} }" clientSideMandatoryCheck="false">
+														<smartField:customData>
+															<core:CustomData key="defaultInputFieldDisplayBehaviour" value="descriptionOnly" />
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColProfitCenter" width="200px" visible="true">
+												<table:label>
+													<m:Label text="{i18n>LABEL_PROFIT_CENTER}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{ProfitCenter}" contextEditable="{= !${IsActiveEntity} }" clientSideMandatoryCheck="false">
+														<smartField:customData>
+															<core:CustomData key="defaultInputFieldDisplayBehaviour" value="descriptionOnly" />
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+											
+											<table:Column id="ColPlant" width="200px" visible="false">
+												<table:label>
+													<m:Label text="{i18n>LABEL_PLANT}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{Plant}" contextEditable="{= !${IsActiveEntity} }">
+														<smartField:customData>
+															<core:CustomData key="defaultInputFieldDisplayBehaviour" value="descriptionOnly" />
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColFunctionArea" width="200px" visible="false">
+												<table:label>
+													<m:Label text="{i18n>LABEL_FUNCTIONAL_AREA}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{FunctionalArea}" contextEditable="{= !${IsActiveEntity} }">
+														<smartField:customData>
+															<core:CustomData key="defaultInputFieldDisplayBehaviour" value="descriptionOnly" />
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+
+											<table:Column id="ColFactoryCalendar" width="200px" visible="false">
+												<table:label>
+													<m:Label text="{i18n>LABEL_CALENDAR}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<smartField:SmartField value="{FactoryCalendar}" contextEditable="{= !${IsActiveEntity} }">
+														<smartField:customData>
+															<core:CustomData key="defaultInputFieldDisplayBehaviour" value="descriptionOnly" />
+														</smartField:customData>
+													</smartField:SmartField>
+												</table:template>
+											</table:Column>
+											
+											<table:Column id="ColDmndRequests" width="100px">
+												<table:label>
+													<m:Label text="{i18n>LABEL_DEMAND}">
+													</m:Label>
+												</table:label>
+												<table:template>
+													<m:Link text="{NmbrOfProjDmndRequests}" press="onDemandLinkPress" enabled="{= !(${IsActiveEntity} === false &amp;&amp; ${HasActiveEntity} === false)}" />
+												</table:template>
+											</table:Column>											
+											
+										</table:columns>
+										<!--<table:dragDropConfig>-->
+										<!--	<dnd:DragDropInfo-->
+										<!-- sourceAggregation="rows"-->
+										<!-- targetAggregation="rows"-->
+										<!-- dropEffect="Move"-->
+										<!-- dropPosition="OnOrBetween"-->
+										<!-- drop="onDrop"/>-->
+										<!--</table:dragDropConfig>-->
+
+									</table:TreeTable>
+								</gantt:table>
+							</gantt:GanttChartWithTable>
+						</gantt:GanttChartContainer>
+				<!--		
+					</m:content>
+				</m:IconTabBar>
+				-->
+			</f:content>
+
+			<f:footer>
+				<m:OverflowToolbar>
+					<m:Button id="button_message" icon="sap-icon://message-popup" text="{ui>/messageCount}" visible="{= ${ui>/editable} &amp;&amp; ${ui>/messageCount} > 0 }" type="Emphasized" press="onMessagesButtonPress" />
+					<m:ToolbarSpacer/>
+					<m:DraftIndicator id="draft_indication"/>
+					<m:Button id="button_save" text="{i18n>BUTTON_SAVE}" type="Emphasized" press="onSavePress"/>
+					<m:Button id="button_cancel" text="{i18n>BUTTON_CANCEL}" press="onCancelPress"/>
+				</m:OverflowToolbar>
+			</f:footer>
+		</f:DynamicPage>
+	</m:App>
+</mvc:View>
