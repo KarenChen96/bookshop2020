@@ -1,0 +1,27 @@
+{
+    "@context": "$metadata#HNodes(children())/$entity",
+    "ID": "335c7bcd-b826-4f14-a788-e0bf6738617b",
+    "type": "root",
+    "sortNumber": 1,
+    "ordinalNumber": 1,
+    "object_id": "0",
+    "parent_ID": null,
+    "children": [
+        {
+            "ID": "335c7bcd-b826-4f14-a788-e0bf6738618a",
+            "type": "branch",
+            "sortNumber": 2,
+            "ordinalNumber": 1,
+            "object_id": "1",
+            "parent_ID": "335c7bcd-b826-4f14-a788-e0bf6738617b"
+        },
+        {
+            "ID": "335c7bcd-b826-4f14-a788-e0bf6738618b",
+            "type": "branch",
+            "sortNumber": 3,
+            "ordinalNumber": 2,
+            "object_id": "2",
+            "parent_ID": "335c7bcd-b826-4f14-a788-e0bf6738617b"
+        }
+    ]
+}

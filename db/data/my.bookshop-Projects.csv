@@ -1,2 +1,3 @@
-TaskName;TASK;ProcessingStatus;PlannedStartDate;PlannedEndDate;ResponsibleCostCenter;ProfitCenter;Plant;FunctionalArea;
-demo-project;1;REL;20200618;20200820;YB001;038;SE;China;
+ID;name;PlannedStartDate;PlannedEndDate;ActualStartDate;ActualEndDate;
+e3da2c2e-72ee-45d5-8def-52964c7b2511;project1;20200618;20200818;20200620;20200820;
+e3da2c2e-72ee-45d5-8def-52964c7b2512;project2;20200619;20200819;20200619;20200819;

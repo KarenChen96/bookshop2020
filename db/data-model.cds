@@ -27,18 +27,41 @@ entity HierarchyNodes : cuid {
   type: NodeType;
   sortNumber: Integer;
   ordinalNumber: Integer;
+  object_id: String;
+  project: Association to Projects on project.ID = $self.object_id;
+  wp: Association to WorkPackages on wp.ID = $self.object_id;
 }
 
+// entity Projects for Gantt Chart Integration
+// entity Projects : {
+//   TaskName : String(30);
+//   key Task : Integer;
+//   ProcessingStatus : String(10);
+//   PlannedStartDate : String;
+//   PlannedEndDate : String;
+//   ActaulStartDate: String;
+//   ActaulEndDate: String;
+//   ResponsibleCostCenter : String;
+//   ProfitCenter : String;
+//   Plant : String;
+//   FunctionalArea : String;
+//   FactoryCalendar : String;
+// }
 
 entity Projects {
-  TaskName : String(30);
-  key Task : Integer;
-  ProcessingStatus : String(10);
+  key ID: String;
+  name: String(30);
   PlannedStartDate : String;
   PlannedEndDate : String;
-  ResponsibleCostCenter : String;
-  ProfitCenter : String;
-  Plant : String;
-  FunctionalArea : String;
-  FactoryCalendar : String;
+  ActualStartDate: String;
+  ActualEndDate: String;
+}
+
+entity WorkPackages {
+  key ID: String;
+  name: String(30);
+  PlannedStartDate : String;
+  PlannedEndDate : String;
+  ActualStartDate: String;
+  ActualEndDate: String;
 }
