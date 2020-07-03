@@ -20,7 +20,7 @@ app.use(
     // target:
     //   "https://c4p-project-management-pm-defiant-sandbox-enterpriseproject-srv.cfapps.sap.hana.ondemand.com", // target port
     services: {
-      "/api/planning": "mainService",
+      "/api/Project": "projectService",
     },
   })
 );

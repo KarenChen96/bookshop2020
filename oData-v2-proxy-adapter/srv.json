@@ -1106,6 +1106,315 @@
         }
       }
     },
+    "project.planning.HierarchyNodes": {
+      "kind": "entity",
+      "@fiori.draft.enabled": true,
+      "includes": [
+        "cuid"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "parent": {
+          "type": "cds.Association",
+          "target": "project.planning.HierarchyNodes",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "children": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "project.planning.HierarchyNodes",
+          "on": [
+            {
+              "ref": [
+                "children",
+                "parent"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "hierarchylevel": {
+          "type": "cds.Integer"
+        },
+        "type": {
+          "type": "project.planning.NodeType"
+        },
+        "sortnumber": {
+          "type": "cds.Integer"
+        },
+        "ordinalnumber": {
+          "type": "cds.Integer"
+        },
+        "object_ID": {
+          "type": "cds.UUID"
+        },
+        "drillstate": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "workpackage": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "project.planning.WorkPackages",
+          "on": [
+            {
+              "ref": [
+                "workpackage",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "object_ID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "project.planning.NodeType": {
+      "kind": "type",
+      "type": "cds.String",
+      "enum": {
+        "root": {},
+        "branch": {},
+        "leaf": {}
+      }
+    },
+    "project.planning.WorkPackages": {
+      "kind": "entity",
+      "@fiori.draft.enabled": true,
+      "includes": [
+        "cuid"
+      ],
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 18
+        },
+        "processingstatus": {
+          "type": "cds.String",
+          "length": 2
+        },
+        "costcenter": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "profitcenter": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "plant": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "functionarea": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "IsActiveEntity": {
+          "type": "cds.Boolean"
+        },
+        "planningstartdate": {
+          "type": "cds.Date"
+        },
+        "planningenddate": {
+          "type": "cds.Date"
+        },
+        "actualstartdate": {
+          "type": "cds.Date"
+        },
+        "actualenddate": {
+          "type": "cds.Date"
+        },
+        "factorycalendar": {
+          "type": "cds.String",
+          "length": 4
+        }
+      }
+    },
+    "projectService": {
+      "kind": "service",
+      "@path": "project"
+    },
+    "projectService.HierarchyNodes": {
+      "kind": "entity",
+      "@fiori.draft.enabled": true,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "project.planning.HierarchyNodes"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "parent": {
+          "type": "cds.Association",
+          "target": "projectService.HierarchyNodes",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "children": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "projectService.HierarchyNodes",
+          "on": [
+            {
+              "ref": [
+                "children",
+                "parent"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "hierarchylevel": {
+          "type": "cds.Integer"
+        },
+        "type": {
+          "type": "project.planning.NodeType"
+        },
+        "sortnumber": {
+          "type": "cds.Integer"
+        },
+        "ordinalnumber": {
+          "type": "cds.Integer"
+        },
+        "object_ID": {
+          "type": "cds.UUID"
+        },
+        "drillstate": {
+          "type": "cds.String",
+          "length": 10
+        },
+        "workpackage": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "projectService.WorkPackages",
+          "on": [
+            {
+              "ref": [
+                "workpackage",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "object_ID"
+              ]
+            }
+          ]
+        }
+      },
+      "$syntax": "projection"
+    },
+    "projectService.WorkPackages": {
+      "kind": "entity",
+      "@fiori.draft.enabled": true,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "project.planning.WorkPackages"
+            ]
+          }
+        }
+      },
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 18
+        },
+        "processingstatus": {
+          "type": "cds.String",
+          "length": 2
+        },
+        "costcenter": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "profitcenter": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "plant": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "functionarea": {
+          "type": "cds.String",
+          "length": 4
+        },
+        "IsActiveEntity": {
+          "type": "cds.Boolean"
+        },
+        "planningstartdate": {
+          "type": "cds.Date"
+        },
+        "planningenddate": {
+          "type": "cds.Date"
+        },
+        "actualstartdate": {
+          "type": "cds.Date"
+        },
+        "actualenddate": {
+          "type": "cds.Date"
+        },
+        "factorycalendar": {
+          "type": "cds.String",
+          "length": 4
+        }
+      },
+      "$syntax": "projection"
+    },
     "sap.common": {
       "kind": "context"
     },
