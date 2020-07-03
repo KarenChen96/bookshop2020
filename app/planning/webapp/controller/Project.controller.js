@@ -610,7 +610,7 @@ sap.ui.define([
 		 *
 		 * @private
 		 */
-		_parseNaviationParameter: function (oAppData, oURLParameters, sNavType) {
+		_parseNavigationParameter: function (oAppData, oURLParameters, sNavType) {
 			var bNavigationBack = false;
 			if (sNavType === sap.ui.generic.app.navigation.service.NavType.xAppState) {
 				var oSelectionVariant = new sap.ui.generic.app.navigation.service.SelectionVariant(oAppData.selectionVariant);
@@ -866,7 +866,7 @@ sap.ui.define([
 			var oParseNavigationPromise = this._oNavigationHandler.parseNavigation();
 
 			oParseNavigationPromise.done(function (oAppData, oURLParameters, sNavType) {
-				that._parseNaviationParameter(oAppData, oURLParameters, sNavType);
+				that._parseNavigationParameter(oAppData, oURLParameters, sNavType);
 			});
 
 			oParseNavigationPromise.fail(function () {
