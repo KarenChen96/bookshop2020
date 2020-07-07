@@ -47,7 +47,6 @@ sap.ui.define([
 			this._initAppState();
 			this._initGanttChart();
 			this._initSmartVariant();
-
 		},
 
 		/** 
@@ -90,7 +89,7 @@ sap.ui.define([
 		},
 
 		/**
-		 * init event bus, subscribe to component resotre event
+		 * init event bus, subscribe to component restore event
 		 *
 		 * @private
 		 */
@@ -330,36 +329,36 @@ sap.ui.define([
 			var oRowSettings = new sap.gantt.simple.GanttRowSettings({
 				highlight:{
 					parts:[
-						{path:'IsActiveEntity'},
-						{path:'HasActiveEntity'}
+						{path:'workpackage/IsActiveEntity'},
+						// {path:'HasActiveEntity'}
 					],
 					formatter: Formatter.formatRowStatus
 				},
-				rowId: "{TaskUUID}",
+				rowId: "{workpackage/ID}",
 				shapes1: new projectplanning.DynamicShape({
-					shapeId: "{TaskUUID}",
+					shapeId: "{workpackage/ID}",
 					activeShape: {
-						path: 'HierarchyNodeLevel',
+						path: 'Hierarchylevel',
 						formatter: Formatter.formatShapeType
 					},
 					shapes: [
 						new sap.gantt.simple.BaseChevron({
 							time: {
 								parts: [
-									{ path: 'PlannedStartDate' },
-									{ path: 'PlannedEndDate' }
+									{ path: 'workpackage/planningstartdate' },
+									{ path: 'workpackage/planningenddate' }
 								],
 								formatter: Formatter.formatStartDate
 							},
 							endTime: {
 								parts: [
-									{ path: 'PlannedStartDate' },
-									{ path: 'PlannedEndDate' }
+									{ path: 'workpackage/planningstartdate' },
+									{ path: 'workpackage/planningenddate' }
 								],
 								formatter: Formatter.formatEndDate
 							},
 							fill: {
-								path: "ProcessingStatus",
+								path: "workpackage/processingstatus",
 								formatter: function (sProcessingStatus) {
 									if (sProcessingStatus === "20" || sProcessingStatus === "40" || sProcessingStatus === "42") {
 										return Formatter.colorDef.shape.PhaseDone;
@@ -370,10 +369,10 @@ sap.ui.define([
 							},
 							tooltip: {
 								parts: [
-									{ path: "Task" },
-									{ path: "TaskName" },
-									{ path: "PlannedStartDate" },
-									{ path: "PlannedEndDate" }
+									{ path: "workpackage/ID" },
+									{ path: "workpackage/name" },
+									{ path: "workpackage/plannedstartdate" },
+									{ path: "workpackage/plannedenddate" }
 								],
 								formatter: Formatter.formatTooltip.bind(Formatter)
 							},
@@ -383,22 +382,24 @@ sap.ui.define([
 						new sap.gantt.simple.BaseRectangle({
 							time: {
 								parts: [
-									{ path: 'PlannedStartDate' },
-									{ path: 'PlannedEndDate' }
+									{ path: 'workpackage/plannedstartdate' },
+									{ path: 'workpackage/plannedenddate' }
 								],
 								formatter: Formatter.formatStartDate
 							},
 							endTime: {
 								parts: [
-									{ path: 'PlannedStartDate' },
-									{ path: 'PlannedEndDate' }
+									{ path: 'workpackage/plannedstartdate' },
+									{ path: 'workpackage/plannedenddate' }
 								],
 								formatter: Formatter.formatEndDate
 							},
 							fill: {
-								path: "ProcessingStatus",
+								path: "workpackage/processingstatus",
 								formatter: function (sProcessingStatus) {
-									if (sProcessingStatus === "20" || sProcessingStatus === "40" || sProcessingStatus === "42") {
+									if (sProcessingStatus === "20" 
+										|| sProcessingStatus === "40" 
+										|| sProcessingStatus === "42") {
 										return Formatter.colorDef.shape.TaskDone;
 									} else {
 										return Formatter.colorDef.shape.TaskOpen;
@@ -407,10 +408,10 @@ sap.ui.define([
 							},
 							tooltip: {
 								parts: [
-									{ path: "Task" },
-									{ path: "TaskName" },
-									{ path: "PlannedStartDate" },
-									{ path: "PlannedEndDate" }
+									{ path: "workpackage/ID" },
+									{ path: "workpackage/name" },
+									{ path: "workpackage/plannedstartdate" },
+									{ path: "workpackage/plannedenddate" }
 								],
 								formatter: Formatter.formatTooltip.bind(Formatter)
 							},
@@ -645,7 +646,7 @@ sap.ui.define([
 			}
 
 			//this._sProjectUUID = "42F2E9AF-C507-1EE9-9FBF-98379C5E22AE"; // Project to test WP : HWP_20181030104415
-			// this._sProjectUUID = "42F2E9AF-C507-1EE9-9FBF-98379C5E22AE";
+			this._sProjectUUID = "42F2E9AF-C507-1EE9-9FBF-98379C5E22AE";
 			//this._bIsActiveEntity = "true";
 
 			if (this._bIsActiveEntity === "false") {
@@ -861,89 +862,94 @@ sap.ui.define([
 		 * @private
 		 */
 		_initAppState: function () {
-			var that = this;
-			this._oNavigationHandler = this._oNavigationHandler || new sap.ui.generic.app.navigation.service.NavigationHandler(this);
-			var oParseNavigationPromise = this._oNavigationHandler.parseNavigation();
 
-			oParseNavigationPromise.done(function (oAppData, oURLParameters, sNavType) {
-				that._parseNavigationParameter(oAppData, oURLParameters, sNavType);
-			});
+			/* Begin of testing: try to load data */
+			this._loadProjectData(); 
+			/** End of Testing */
 
-			oParseNavigationPromise.fail(function () {
-				var msg = that.i18nBundle.getText("MSG_INVALID_URL");
-				that._showInvalidAppState(msg);			
-			});
+			// var that = this;
+			// this._oNavigationHandler = this._oNavigationHandler || new sap.ui.generic.app.navigation.service.NavigationHandler(this);
+			// var oParseNavigationPromise = this._oNavigationHandler.parseNavigation();
+
+			// oParseNavigationPromise.done(function (oAppData, oURLParameters, sNavType) {
+			// 	that._parseNavigationParameter(oAppData, oURLParameters, sNavType);
+			// });
+
+			// oParseNavigationPromise.fail(function () {
+			// 	var msg = that.i18nBundle.getText("MSG_INVALID_URL");
+			// 	that._showInvalidAppState(msg);			
+			// });
 			
-			this._oCrossAppNav = this._oCrossAppNav || sap.ushell.Container.getService("CrossApplicationNavigation"); 
+			// this._oCrossAppNav = this._oCrossAppNav || sap.ushell.Container.getService("CrossApplicationNavigation"); 
 			 
 		
-			var oNavProjectBuilder = { 
-				target: { 
-					semanticObject: "Project", 
-					action: "displayDetails" 
-				}
-			}; 
+			// var oNavProjectBuilder = { 
+			// 	target: { 
+			// 		semanticObject: "Project", 
+			// 		action: "displayDetails" 
+			// 	}
+			// }; 
 		
-			var oNavProjectControl = { 
-				target: { 
-					semanticObject: "EnterpriseProject", 
-					action: "maintain" 
-				}
-			}; 		
+			// var oNavProjectControl = { 
+			// 	target: { 
+			// 		semanticObject: "EnterpriseProject", 
+			// 		action: "maintain" 
+			// 	}
+			// }; 		
 
-			var oNavMonitorProject = { 
-				target: { 
-					semanticObject: "EnterpriseProject", 
-					action: "monitor" 
-				}
-			}; 	
+			// var oNavMonitorProject = { 
+			// 	target: { 
+			// 		semanticObject: "EnterpriseProject", 
+			// 		action: "monitor" 
+			// 	}
+			// }; 	
 			
-			var oNavProjectCost = { 
-				target: { 
-					semanticObject: "Project", 
-					action: "displayFinancialReport" 
-				}
-			}; 				
+			// var oNavProjectCost = { 
+			// 	target: { 
+			// 		semanticObject: "Project", 
+			// 		action: "displayFinancialReport" 
+			// 	}
+			// }; 				
 		
-			var oNavProjectBudget = { 
-				target: { 
-					semanticObject: "EnterpriseProject", 
-					action: "displayProjectBudget" 
-				}
-			}; 	
+			// var oNavProjectBudget = { 
+			// 	target: { 
+			// 		semanticObject: "EnterpriseProject", 
+			// 		action: "displayProjectBudget" 
+			// 	}
+			// }; 	
 
-			var oNavProjectProcurement = { 
-				target: { 
-					semanticObject: "Project", 
-					action: "manageProcurement" 
-				}
-			};	
+			// var oNavProjectProcurement = { 
+			// 	target: { 
+			// 		semanticObject: "Project", 
+			// 		action: "manageProcurement" 
+			// 	}
+			// };	
 			
-			var oNavProjectBrief = { 
-				target: { 
-					semanticObject: "EnterpriseProject", 
-					action: "showProjectBrief" 
-				}
-			};
+			// var oNavProjectBrief = { 
+			// 	target: { 
+			// 		semanticObject: "EnterpriseProject", 
+			// 		action: "showProjectBrief" 
+			// 	}
+			// };
 			
-			var oNavProjectDemand = { 
-				target: { 
-					semanticObject: "ProjectDemand", 
-					action: "manage" 
-				}
-			};			
+			// var oNavProjectDemand = { 
+			// 	target: { 
+			// 		semanticObject: "ProjectDemand", 
+			// 		action: "manage" 
+			// 	}
+			// };			
 			
-			var aArgs = [oNavProjectBuilder, oNavProjectControl, oNavMonitorProject, oNavProjectCost, oNavProjectBudget, oNavProjectProcurement, oNavProjectBrief, oNavProjectDemand];
-			this._oCrossAppNav.isNavigationSupported(aArgs).then(function(aResponses)  
-			{ 
-				that._oOpenInButton.setEnabled(true);
-				that._aNavAuthorization = aResponses;
+			// var aArgs = [oNavProjectBuilder, oNavProjectControl, oNavMonitorProject, oNavProjectCost, oNavProjectBudget, oNavProjectProcurement, oNavProjectBrief, oNavProjectDemand];
+			// this._oCrossAppNav.isNavigationSupported(aArgs).then(function(aResponses)  
+			// { 
+			// 	that._oOpenInButton.setEnabled(true);
+			// 	that._aNavAuthorization = aResponses;
 				
-				if(!(aResponses[7] && aResponses[7].supported))
-				{
-					that._removeDemandColumn();
-				}
-			}); 			
+			// 	if(!(aResponses[7] && aResponses[7].supported))
+			// 	{
+			// 		that._removeDemandColumn();
+			// 	}
+			// }); 			
 		},
 
 		/**
@@ -1078,85 +1084,88 @@ sap.ui.define([
 		 * @private
 		 */
 		_loadProjectData: function () {
-			this._oView.setBusy(true);
-			this._sProjectPath = this._oDataPath.projectPath + "(ProjectUUID=guid\'" + this._sProjectUUID + "\',IsActiveEntity=" + this._bIsActiveEntity +
-				")";
-			this._sBindingPath = this._sProjectPath + "/" + this._oDataPath.taskNavigation;
-			var that = this;
-			this._oDataModel.read(this._sProjectPath, {
-				urlParameters: {
-					$expand: "DraftAdministrativeData"
-				},
-				success: function (oData) { 
-					that._oHeaderData = oData;
-					that._oHeaderModel.setData(that._oHeaderData);
-					that._updateCopilotContexts();
-					that._setAxisTime(oData.EarliestStartDate, oData.LatestFinishDate);
-					if("YP05" !== oData.ProjectProfileCode)
-					{
-						that._removeBEColumn();
-					} else {
-						that._bIsRevenueProject = true;
-					}
+			// this._oView.setBusy(true);
+			// this._sProjectPath = this._oDataPath.projectPath + "(ProjectUUID=guid\'" + this._sProjectUUID + "\',IsActiveEntity=" + this._bIsActiveEntity +
+			// 	")";
+			// this._sBindingPath = this._sProjectPath + "/" + this._oDataPath.taskNavigation;
+			// var that = this;
+			// this._oDataModel.read(this._sProjectPath, {
+			// 	urlParameters: {
+			// 		$expand: "DraftAdministrativeData"
+			// 	},
+			// 	success: function (oData) { 
+			// 		that._oHeaderData = oData;
+			// 		that._oHeaderModel.setData(that._oHeaderData);
+			// 		that._updateCopilotContexts();
+			// 		that._setAxisTime(oData.EarliestStartDate, oData.LatestFinishDate);
+			// 		if("YP05" !== oData.ProjectProfileCode)
+			// 		{
+			// 			that._removeBEColumn();
+			// 		} else {
+			// 			that._bIsRevenueProject = true;
+			// 		}
 
-					if ((oData.Update_mc) && (!that._bEditMode)) {
-						that._oEditButton.setVisible(true);
-					}
+			// 		if ((oData.Update_mc) && (!that._bEditMode)) {
+			// 			that._oEditButton.setVisible(true);
+			// 		}
 					
-					if((!that._bEditMode) && (oData.DraftAdministrativeData))
-					{
-						if(oData.DraftAdministrativeData.DraftIsCreatedByMe)
-						{ //own draft
-							that._oObjectMarker.setType(sap.m.ObjectMarkerType.Draft);
-						}
-						else if(oData.DraftAdministrativeData.InProcessByUser)
-						{ //locked 
-							that._oObjectMarker.setType(sap.m.ObjectMarkerType.Locked);
-						}
-						else
-						{ //unsaved changes
-							that._oObjectMarker.setType(sap.m.ObjectMarkerType.Unsaved);
-						}
-						that._oObjectMarker.setVisible(true);
-					}
+			// 		if((!that._bEditMode) && (oData.DraftAdministrativeData))
+			// 		{
+			// 			if(oData.DraftAdministrativeData.DraftIsCreatedByMe)
+			// 			{ //own draft
+			// 				that._oObjectMarker.setType(sap.m.ObjectMarkerType.Draft);
+			// 			}
+			// 			else if(oData.DraftAdministrativeData.InProcessByUser)
+			// 			{ //locked 
+			// 				that._oObjectMarker.setType(sap.m.ObjectMarkerType.Locked);
+			// 			}
+			// 			else
+			// 			{ //unsaved changes
+			// 				that._oObjectMarker.setType(sap.m.ObjectMarkerType.Unsaved);
+			// 			}
+			// 			that._oObjectMarker.setVisible(true);
+			// 		}
 
-					if (that._bEditMode) {
-						that._sActiveUUID = oData.ActiveUUID;
+			// 		if (that._bEditMode) {
+			// 			that._sActiveUUID = oData.ActiveUUID;
 						
-						if(oData.DraftAdministrativeData && oData.DraftAdministrativeData.LastChangeDateTime && 
-									oData.DraftAdministrativeData.CreationDateTime && 
-									oData.DraftAdministrativeData.LastChangeDateTime > oData.DraftAdministrativeData.CreationDateTime)
-						{
-							that._bIsDraftModified = true;
-						}
-					}
+			// 			if(oData.DraftAdministrativeData && oData.DraftAdministrativeData.LastChangeDateTime && 
+			// 						oData.DraftAdministrativeData.CreationDateTime && 
+			// 						oData.DraftAdministrativeData.LastChangeDateTime > oData.DraftAdministrativeData.CreationDateTime)
+			// 			{
+			// 				that._bIsDraftModified = true;
+			// 			}
+			// 		}
 
-				},
-				error: function (oEvent) {
-					that._handleErrorMessage(oEvent, that._operations.getCollection);
-				}
-			});
+			// 	},
+			// 	error: function (oEvent) {
+			// 		that._handleErrorMessage(oEvent, that._operations.getCollection);
+			// 	}
+			// });
+			
+			/**Begin of CC's trial code */
+			this._sBindingPath = "/HierarchyNodes";
+			/**End of CC's trial code */
 
 			this._oTreeTable.bindAggregation("rows", {
 				path: this._sBindingPath,
-				sorter: [new sap.ui.model.Sorter("HierarchyNodeOrdinalNumber")],
+				// sorter: [new sap.ui.model.Sorter("HierarchyNodeOrdinalNumber")],
 				parameters: {
 					operationMode: "Server",
 					treeAnnotationProperties: {
-						hierarchyLevelFor: "HierarchyNodeLevel",
-						hierarchyParentNodeFor: "ParentObjectUUID",
-						hierarchyNodeFor: "TaskUUID",
-						hierarchyDrillStateFor: "ProjElmntHierarchyDrillState",
-						hierarchyNodeDescendantCountFor: "HierarchyNodeSubTreeSize"
+						hierarchyLevelFor: "hierarchylevel",
+						hierarchyParentNodeFor: "parent_ID",
+						hierarchyNodeFor: "ID",
+						hierarchyDrillStateFor: "expanded"
 					},
+					expand: "workpackage",
 					numberOfExpandedLevels: 2,
 					rootLevel: 0,
 					restoreTreeStateAfterChange: true
 				}
 			});				
 
-
-			this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
+			// this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
 		},
 
 		/**

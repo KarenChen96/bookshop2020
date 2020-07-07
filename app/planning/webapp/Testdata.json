@@ -1,0 +1,18 @@
+{
+    "Projects": [
+        {
+            "ID": "f846b0b9-01d4-4f6d-82a4-d79204f62279",
+            "name": "NT001",
+            "processingstatus": "00",
+            "costcenter": "1000",
+            "profitcenter": "1000",
+            "functionarea": "1000",
+            "plant": "1000",
+            "IsActivity": "X",
+            "planningstartdate": "2020-01-01",
+            "planningenddate": "2020-12-19",
+            "actualstartdate": "2020-06-19",
+            "actualenddate": "2020-12-19"
+        }
+    ]
+}

@@ -12,8 +12,8 @@
 		},
 		"ach": "PPM-FIO",
 		"dataSources": {
-			"mainService": {
-				"uri": "/api/planning/",
+			"projectService": {
+				"uri": "http://localhost:4000/v2/api/project/",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0"					
@@ -22,76 +22,8 @@
 		},
 		"crossNavigation": {
 			"inbounds": {
-				"MyProjects": {
-					"semanticObject": "EnterpriseProject",
-					"action": "planProject",
-					"signature": {
-						"additionalParameters": "allowed",
-						"parameters": {
-							"ProjectUUID": {
-								"required": true
-							},
-							"IsActiveEntity": {
-								"required": true
-							}
-						}
-					}
-				}
 			},
 			"outbounds": {
-				"WorkPackage": {
-					"semanticObject": "EnterpriseProject",
-					"action": "processProjectElement",
-					"parameters": {
-						"ProjectUUID": {},
-						"ActiveTaskUUID": {},
-						"IsActiveEntity": {}
-					}
-				},
-				"ProjectBuilder": {
-					"semanticObject": "Project",
-					"action": "displayDetails",
-					"parameters": {
-						"Project": {}
-					}
-				},
-				"ProjectControl": {
-					"semanticObject": "EnterpriseProject",
-					"action": "maintain",
-					"parameters": {
-						"ProjectUUID": {},
-						"IsActiveEntity": {}
-					}
-				},
-				"MonitorProject": {
-					"semanticObject": "EnterpriseProject",
-					"action": "monitor",
-					"parameters": {
-						"Project": {}
-					}
-				},
-				"ProjectCost": {
-					"semanticObject": "Project",
-					"action": "displayFinancialReport",
-					"parameters": {
-						"Project": {}
-					}
-				},
-				"ProjectBudget": {
-					"semanticObject": "EnterpriseProject",
-					"action": "displayProjectBudget",
-					"parameters": {
-						"Project": {}
-					}
-				},											
-				"ProjectProcurement": {
-					"semanticObject": "Project",
-					"action": "manageProcurement",
-					"parameters": {
-						"Project": {},
-						"DisplayCurrency": {}
-					}
-				}
 			}
 		},
 		"sourceTemplate": {
@@ -175,7 +107,7 @@
 				}
 			},
 			"": {
-				"dataSource": "mainService",
+				"dataSource": "projectService",
 				"preload": true
 			}
 		},
@@ -197,10 +129,9 @@
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
-				"viewPath": "projectplanning.view",
+				"viewPath": "view",
 				"controlId": "Project",
-				"controlAggregation": "pages",
-				"async": true
+				"controlAggregation": "pages"
 			},
 			"routes": [
 
