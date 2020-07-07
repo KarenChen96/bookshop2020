@@ -66,7 +66,7 @@
 					-->
 				<gantt:GanttChartContainer id="ganttContainer" enableTimeScrollSync="true" height="205px" class="sapUiSmallMarginTop">
 					<gantt:toolbar>
-						<gantt:ContainerToolbar showSettingButton="false" showLegendButton="true" design="Transparent" alignCustomContentToRight="true">
+						<gantt:ContainerToolbar showSettingButton="false" showLegendButton="true" design="Transparent" alignCustomContentToRight="true" showDisplayTypeButton="true">
 							<smartvariants:SmartVariantManagement id="btnSmartVariant" showExecuteOnSelection="true" showShare="true" lifecycleSupport="true" persistencyKey="projectplanning" />
 							<m:ToolbarSpacer id="spacer" />
 							<!-- <m:Button id="btnStatus" text="{i18n>BUTTON_PROCESSING_STATUS}" press="onStatusPressed" type="Transparent" visible="false"/> -->
