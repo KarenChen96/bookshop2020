@@ -168,16 +168,30 @@ sap.ui.define([
 			};
 
 			this._oHeaderModel = new sap.ui.model.json.JSONModel();
-			this._oHeaderData = this._oHeaderData || {
-				ProjectName: null,
-				Project: null,
-				ProcessingStatusText: null,
-				ProjectProfileCodeText: null,
-				PersonFullName: null,
+			// this._oHeaderData = this._oHeaderData || {
+			// 	ProjectName: null,
+			// 	Project: null,
+			// 	ProcessingStatusText: null,
+			// 	ProjectProfileCodeText: null,
+			// 	PersonFullName: null,
+			// 	WBSElementObject: null,
+			// 	EarliestStartDate: null,
+			// 	LatestFinishDate: null
+			// };
+
+			// Begin of CC's code
+			this._oHeaderData =  {
+				ProjectName: "Test Project",
+				Project: "CC_TEST_01",
+				ProcessingStatusText: "created",
+				ProjectProfileCodeText: "0001",
+				PersonFullName: "Cecilia Chen",
 				WBSElementObject: null,
-				EarliestStartDate: null,
-				LatestFinishDate: null
+				EarliestStartDate: "07082020",
+				LatestFinishDate: "09082020"
 			};
+			// End of CC's code
+
 			this._oHeaderModel.setData(this._oHeaderData);
 
 			this._oUIModel = new sap.ui.model.json.JSONModel();
@@ -276,6 +290,8 @@ sap.ui.define([
 			this._oTreeTable = this._oView.byId("treeTable");
 			this._oTreeTable.attachToggleOpenState(this.onToggleOpenState, this);
 			this._oObjectMarker = this._oView.byId("objectMarker");
+			this._oBtnEnterFullScreen = this._oView.byId("btnFullScreen");
+        	this._oBtnExitFullScreen = this._oView.byId("btnExitFullScreen");
 
 			this._oBtnExpand = this._oView.byId("btnExpand");
 			this._oBtnCollapse = this._oView.byId("btnCollapse");
@@ -327,18 +343,18 @@ sap.ui.define([
 		 */
 		_initGanttChart: function () {
 			var oRowSettings = new sap.gantt.simple.GanttRowSettings({
-				highlight:{
-					parts:[
-						{path:'workpackage/IsActiveEntity'},
-						// {path:'HasActiveEntity'}
-					],
-					formatter: Formatter.formatRowStatus
-				},
+				// highlight:{
+				// 	parts:[
+				// 		{path:'IsActiveEntity'},
+				// 		{path:'HasActiveEntity'}
+				// 	],
+				// 	formatter: Formatter.formatRowStatus
+				// },
 				rowId: "{workpackage/ID}",
 				shapes1: new projectplanning.DynamicShape({
 					shapeId: "{workpackage/ID}",
 					activeShape: {
-						path: 'Hierarchylevel',
+						path: 'hierarchylevel',
 						formatter: Formatter.formatShapeType
 					},
 					shapes: [
@@ -369,10 +385,11 @@ sap.ui.define([
 							},
 							tooltip: {
 								parts: [
-									{ path: "workpackage/ID" },
+									// { path: "workpackage/ID" },
+									{ path: "workpackage/costcenter" },
 									{ path: "workpackage/name" },
-									{ path: "workpackage/plannedstartdate" },
-									{ path: "workpackage/plannedenddate" }
+									{ path: "workpackage/planningstartdate" },
+									{ path: "workpackage/planningenddate" }
 								],
 								formatter: Formatter.formatTooltip.bind(Formatter)
 							},
@@ -382,15 +399,15 @@ sap.ui.define([
 						new sap.gantt.simple.BaseRectangle({
 							time: {
 								parts: [
-									{ path: 'workpackage/plannedstartdate' },
-									{ path: 'workpackage/plannedenddate' }
+									{ path: 'workpackage/planningstartdate' },
+									{ path: 'workpackage/planningenddate' }
 								],
 								formatter: Formatter.formatStartDate
 							},
 							endTime: {
 								parts: [
-									{ path: 'workpackage/plannedstartdate' },
-									{ path: 'workpackage/plannedenddate' }
+									{ path: 'workpackage/planningstartdate' },
+									{ path: 'workpackage/planningenddate' }
 								],
 								formatter: Formatter.formatEndDate
 							},
@@ -408,10 +425,11 @@ sap.ui.define([
 							},
 							tooltip: {
 								parts: [
-									{ path: "workpackage/ID" },
+									// { path: "workpackage/ID" },
+									{ path: "workpackage/costcenter" },
 									{ path: "workpackage/name" },
-									{ path: "workpackage/plannedstartdate" },
-									{ path: "workpackage/plannedenddate" }
+									{ path: "workpackage/planningstartdate" },
+									{ path: "workpackage/planningenddate" }
 								],
 								formatter: Formatter.formatTooltip.bind(Formatter)
 							},
@@ -694,7 +712,7 @@ sap.ui.define([
 				}
 			});					
 
-			this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
+			// this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
 		},
 
 		/**
@@ -2111,10 +2129,10 @@ sap.ui.define([
 		 * @public
 		 */
 		onExpandPressed: function () {
-			this._oView.setBusy(true);
+			// this._oView.setBusy(true);
 			this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
 			this._oTreeTable.expandToLevel(100);
-			this._oTreeTable.fireToggleOpenState();
+			// this._oTreeTable.fireToggleOpenState();
 		},
 
 		/**
@@ -2135,9 +2153,10 @@ sap.ui.define([
 				}
 			}
 			*/
-			this._oView.setBusy(true);
+			// this._oView.setBusy(true);
 			this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
-			this._oTreeTable.expandToLevel(1);
+			// this._oTreeTable.expandToLevel(1);
+			this._oTreeTable.collapseAll();
 			this._oTreeTable.fireToggleOpenState();
 		},
 
@@ -4380,6 +4399,40 @@ sap.ui.define([
 			});
 			this._oDemandDetailPopover.setModel(this._oDemandModel, "Demand");				
 		},		
+
+		/**
+       * press full screen button click event callback
+       *
+       * @public
+       */
+
+      onFullScreenPressed: function() {
+
+		this.getView().byId("projectPageHeader").setVisible(false);
+		this.getView().byId("projectHeaderTitle").setVisible(false);
+		this.bFullScreen = true;
+	   //  this._adjustHeightOfGanttChartContainer();
+		this._oBtnEnterFullScreen.setVisible(false);
+		this._oBtnExitFullScreen.setVisible(true);
+	   
+	 }, 
+
+	 /**
+	  * press exist full screen button click event callback
+	  *
+	  * @public
+	  */
+
+	 onExitFullScreenPressed: function(){
+
+	   this.getView().byId("projectPageHeader").setVisible(true);
+	   this.getView().byId("projectHeaderTitle").setVisible(true);
+	   this.bFullScreen = false;
+	  //  this._adjustHeightOfGanttChartContainer();
+	   this._oBtnEnterFullScreen.setVisible(true);
+	   this._oBtnExitFullScreen.setVisible(false);
+	 }, 
+
 		
 		/**
 		 * demand column press event callback

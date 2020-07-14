@@ -23,7 +23,8 @@ sap.ui.define([
 				bundleName: "projectplanning.i18n.i18n"
 			}).getResourceBundle();
 
-			this.sLBLTask = i18nBundle.getText("LABEL_TASK_ID");
+			// this.sLBLTask = i18nBundle.getText("LABEL_TASK_ID");
+			this.sLBLTask = i18nBundle.getText("LABEL_COST_CENTER");
 			this.sLBLTaskName = i18nBundle.getText("LABEL_OBJECT_NAME");
 			this.sLBLPlannedStart = i18nBundle.getText("LABEL_START_DATETIME");
 			this.sLBLPlannedFinish = i18nBundle.getText("LABEL_FINISH_DATETIME");

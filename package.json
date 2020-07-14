@@ -7,12 +7,14 @@
   "scripts": {
     "build": "cds build/all --clean",
     "schema": "cds compile srv --to sql > srv/src/main/resources/schema.sql",
-    "deploy": "cds deploy"
+    "deploy": "cds deploy",
+    "start": "node node_modules/@sap/approuter/approuter.js"
   },
   "dependencies": {
     "@sap/cds": "^3.0.0",
     "@sap/cds-odata-v2-adapter-proxy": "^1.4.33",
-    "@sap/hana-client": "^2.4.196"
+    "@sap/hana-client": "^2.4.196",
+    "@sap/approuter": "^6.8.2"
   },
   "cds": {
     "build": {

@@ -93,6 +93,9 @@
 							<m:Button id="btnExpand" icon="sap-icon://expand-all" press="onExpandPressed" type="Transparent" tooltip="{i18n>TOOLTIP_EXPAND_ALL}" />
 							<m:Button id="btnCollapse" icon="sap-icon://collapse-all" press="onCollapsePressed" type="Transparent" tooltip="{i18n>TOOLTIP_COLLAPSE_ALL}" />
 							<m:Button id="btnSettings" icon="sap-icon://action-settings" press="onP13nDialog" />
+							<m:Button id="btnFullScreen" icon="sap-icon://full-screen" press="onFullScreenPressed" type="Transparent"/>
+                            <m:Button id="btnExitFullScreen" icon="sap-icon://exit-full-screen" press="onExitFullScreenPressed" type="Transparent" visible="false"/>
+
 							<gantt:legendContainer>
 								<gantt:LegendContainer legends="{path:'legend>/', factory:'.legendFactory'}" width="230px" height="250px"></gantt:LegendContainer>
 							</gantt:legendContainer>
@@ -107,7 +110,7 @@
 									</table:RowAction>
 								</table:rowActionTemplate>
 								<table:columns>
-									<table:Column id="ColTaskName" width="100px">
+									<table:Column id="ColTaskName" width="200px">
 										<table:label>
 											<m:Label text="{i18n>LABEL_OBJECT_NAME}"></m:Label>
 										</table:label>
@@ -116,16 +119,16 @@
 										</table:template>
 									</table:Column>
 
-									<table:Column id="ColTaskID" width="100px">
+									<!-- <table:Column id="ColTaskID" width="100px">
 										<table:label>
 											<m:Label text="{i18n>LABEL_TASK_ID}"></m:Label>
 										</table:label>
 										<table:template>
 											<smartField:SmartField value="{workpackage/ID}" contextEditable="{= !${workpackage/IsActiveEntity} }" />
 										</table:template>
-									</table:Column>
+									</table:Column> -->
 
-									<table:Column id="ColProcessingStatus" width="150px">
+									<table:Column id="ColProcessingStatus" width="200px">
 										<table:label>
 											<m:Label text="{i18n>LABEL_PROCESSING_STATUS}"></m:Label>
 										</table:label>
@@ -138,7 +141,7 @@
 										</table:template>
 									</table:Column>
 
-									<table:Column id="ColStart" width="150px" hAlign="End">
+									<table:Column id="ColStart" width="200px" hAlign="End">
 										<table:label>
 											<m:Label text="{i18n>LABEL_START_DATETIME}"></m:Label>
 										</table:label>
@@ -151,7 +154,7 @@
 										</table:template>
 									</table:Column>
 
-									<table:Column id="ColEnd" width="150px" hAlign="End">
+									<table:Column id="ColEnd" width="200px" hAlign="End">
 										<table:label>
 											<m:Label text="{i18n>LABEL_FINISH_DATETIME}"></m:Label>
 										</table:label>
@@ -164,7 +167,7 @@
 										</table:template>
 									</table:Column>
 
-									<table:Column id="ColCostCenter" width="150px" visible="true">
+									<table:Column id="ColCostCenter" width="200px" visible="true">
 										<table:label>
 											<m:Label text="{i18n>LABEL_COST_CENTER}"></m:Label>
 										</table:label>

@@ -1,0 +1,16 @@
+{
+    "welcomeFile": "index.html",
+    "authenticationMethod": "xsuaa",
+    "logout": {
+        "logoutEndpoint": "",
+        "logoutPage": "/logout-page.html"
+    },
+    "routes": [
+        {
+            "source": "/test/(.*)",
+            "target": "$1",
+            "destination": "$1"
+        }
+    ]
+       
+}

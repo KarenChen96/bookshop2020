@@ -10,5 +10,5 @@ service mainService {
     };
     entity WPs as projection on my.WorkPackages;
 
-    function expand( objectId: String, level: Integer ) returns array of WPs;                           
+    // function expand( objectId: String, level: Integer ) returns array of WPs;                           
 }

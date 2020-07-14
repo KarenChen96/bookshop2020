@@ -142,35 +142,35 @@ public class mainServiceHandler implements EventHandler {
     // Above case seems not so matched with real business requirement...
 
     // @On(entity = {Projects_.CDS_NAME, WPs_.CDS_NAME})
-    @On(event = "expand")
-    public void expand(ExpandContext context) {
-        List<WPs> res = new ArrayList<>();
-        // object_ID needs to be modified from String to UUID later,
-        String objectID = context.getObjectId(); // Retrieve from input parameter
+    // @On(event = "expand")
+    // public void expand(ExpandContext context) {
+    //     List<WPs> res = new ArrayList<>();
+    //     // object_ID needs to be modified from String to UUID later,
+    //     String objectID = context.getObjectId(); // Retrieve from input parameter
 
-        // Step 1: search the corresponding HNodes with the objectID
-        List<HNodes> nodes = db.run(Select.from(HNODES).where(n -> n.object_id().eq(objectID))).listOf(HNodes.class);
-        HNodes node = nodes.stream().findFirst().orElse(null);
-        if (node == null) {
-            // throw Exception;
-        } else {
-            // Step 2: expand one level descendent
-            String node_id = node.getId();
-            List<HNodes> children = db.run(Select.from(HNODES).where(n -> n.parent_ID().eq(node_id)))
-                    .listOf(HNodes.class);
-            for (HNodes child : children) {
-                List<WPs> temp = db.run(Select.from(WPS)
-                        // .columns(w -> w.ID(), w -> w.name(), w -> w.PlannedStartDate(), w ->
-                        // w.PlannedEndDate())
-                        .where(w -> w.ID().eq(child.getObjectId()))).listOf(WPs.class);
-                WPs wp = temp.stream().findFirst().orElse(null);
-                if (wp != null) {
-                    res.add(wp);
-                }
-            }
-        }
-        context.setResult(res);
-    }
+    //     // Step 1: search the corresponding HNodes with the objectID
+    //     List<HNodes> nodes = db.run(Select.from(HNODES).where(n -> n.object_id().eq(objectID))).listOf(HNodes.class);
+    //     HNodes node = nodes.stream().findFirst().orElse(null);
+    //     if (node == null) {
+    //         // throw Exception;
+    //     } else {
+    //         // Step 2: expand one level descendent
+    //         String node_id = node.getId();
+    //         List<HNodes> children = db.run(Select.from(HNODES).where(n -> n.parent_ID().eq(node_id)))
+    //                 .listOf(HNodes.class);
+    //         for (HNodes child : children) {
+    //             List<WPs> temp = db.run(Select.from(WPS)
+    //                     // .columns(w -> w.ID(), w -> w.name(), w -> w.PlannedStartDate(), w ->
+    //                     // w.PlannedEndDate())
+    //                     .where(w -> w.ID().eq(child.getObjectId()))).listOf(WPs.class);
+    //             WPs wp = temp.stream().findFirst().orElse(null);
+    //             if (wp != null) {
+    //                 res.add(wp);
+    //             }
+    //         }
+    //     }
+    //     context.setResult(res);
+    // }
 
     // Expand one sublevel nodes, no expansion for leaf nodes
     // Question: what is a proper return type? The sub-level can be both WPs and
