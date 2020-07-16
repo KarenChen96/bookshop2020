@@ -14,6 +14,7 @@ ordinalnumber : Integer;
 object_ID : UUID; 
 drillstate: String(10);
 workpackage : Association to one WorkPackages on workpackage.ID = object_ID; 
+subtreesize: Integer;
 
 }
 

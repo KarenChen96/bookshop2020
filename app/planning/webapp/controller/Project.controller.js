@@ -1167,23 +1167,24 @@ sap.ui.define([
 
 			this._oTreeTable.bindAggregation("rows", {
 				path: this._sBindingPath,
-				// sorter: [new sap.ui.model.Sorter("HierarchyNodeOrdinalNumber")],
+				sorter: [new sap.ui.model.Sorter("ordinalnumber")],
 				parameters: {
 					operationMode: "Server",
 					treeAnnotationProperties: {
 						hierarchyLevelFor: "hierarchylevel",
 						hierarchyParentNodeFor: "parent_ID",
 						hierarchyNodeFor: "ID",
-						hierarchyDrillStateFor: "expanded"
+						hierarchyDrillStateFor: "drillstate",			
+						hierarchyNodeDescendantCountFor: "subtreesize"
 					},
 					expand: "workpackage",
-					numberOfExpandedLevels: 2,
+					numberOfExpandedLevels: 3,
 					rootLevel: 0,
 					restoreTreeStateAfterChange: true
 				}
 			});				
 
-			// this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
+			this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
 		},
 
 		/**
@@ -2129,10 +2130,10 @@ sap.ui.define([
 		 * @public
 		 */
 		onExpandPressed: function () {
-			// this._oView.setBusy(true);
+			this._oView.setBusy(true);
 			this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
 			this._oTreeTable.expandToLevel(100);
-			// this._oTreeTable.fireToggleOpenState();
+			this._oTreeTable.fireToggleOpenState();
 		},
 
 		/**
@@ -2153,7 +2154,7 @@ sap.ui.define([
 				}
 			}
 			*/
-			// this._oView.setBusy(true);
+			this._oView.setBusy(true);
 			this._oTreeTable.getBinding("rows").attachDataReceived(this.onDataReceived, this);
 			// this._oTreeTable.expandToLevel(1);
 			this._oTreeTable.collapseAll();
